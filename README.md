@@ -25,11 +25,15 @@ pip install -r requirements.txt
 
 对图片进行了简单的预处理（灰度化、归一化），目的是缩短模型训练的时间。
 
+验证码样例如下图：
+
+![0a2u](https://github.com/Woscmd/Captcha-Recognition/blob/master/image/0a2u.png)
+
 ## 3 模型的训练
 
 ### 3.1 模型结构
 
-![1592481953953](README.assets/1592481953953.png)
+![model](https://github.com/Woscmd/Captcha-Recognition/blob/master/image/model.png)
 
 ### 3.2 LOSS&Accuracy曲线
 
@@ -38,4 +42,4 @@ pip install -r requirements.txt
 - 平均每轮的训练时间为39s，150轮次的时间大约为1个半小时。(训练平台：NVIDIA GTX 1050)
 - 模型准确率为99%。
 
-![1592482154849](README.assets/1592482154849.png)
+![accuracy&loss](https://github.com/Woscmd/Captcha-Recognition/blob/master/image/accuracy_loss.png)
