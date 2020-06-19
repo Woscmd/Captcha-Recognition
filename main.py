@@ -6,8 +6,6 @@ from PIL import Image
 import matplotlib.pyplot as plt
 import time
 import random
-import pandas as pd
-
 
 """
 # 使用GPU训练时，建议取消此注释
@@ -16,20 +14,26 @@ assert len(gpu) == 1
 tf.config.experimental.set_memory_growth(gpu[0], True)
 """
 
+
 number = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
 alphabet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u',
             'v', 'w', 'x', 'y', 'z']
 ALPHABET = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U',
             'V', 'W', 'X', 'Y', 'Z']
-CHAR_SET = number + alphabet
-CHAR_SET_LEN = len(CHAR_SET)
+CHAR_SET = number + alphabet  # 字符集种类
+CHAR_SET_LEN = len(CHAR_SET)  # 字符集长度
 IMAGE_HEIGHT = 60
 IMAGE_WIDTH = 120
-MAX_CAPTCHA = 4
-TRAIN_IMAGES_PATH = r'train'
-TEST_IMAGES_PATH = r'test'
+MAX_CAPTCHA = 4               # 验证码图片包含的字符数目
+TRAIN_IMAGES_PATH = r'train'  # 训练集路径
+TEST_IMAGES_PATH = r'test'    # 测试集路径
 
-# 图片转为灰度图，如果是3通道图则计算，单通道图则直接返回
+
+"""
+function: 图片转为灰度图，如果是3通道图则计算，单通道图则直接返回
+param:    图片的向量化数据
+return:   图片的灰度值
+"""
 def rgb2gray(img):
     if len(img.shape) > 2:
         r, g, b = img[:, :, 0], img[:, :, 1], img[:, :, 2]
@@ -38,7 +42,12 @@ def rgb2gray(img):
     else:
         return img
 
-# 对标签OneHot编码
+
+"""
+function: 对标签OneHot编码
+param:    图片的标签
+return:   4*36的矩阵
+"""
 def text2vec(text):
     if len(text) > MAX_CAPTCHA:
         raise ValueError('验证码最长{}个字符'.format(MAX_CAPTCHA))
@@ -49,7 +58,12 @@ def text2vec(text):
         vector[i][idx] = 1.0
     return vector
 
-# 将向量转为文本
+
+"""
+function: 将向量转为文本
+param:    4*36的矩阵
+return:   图片的标签
+"""
 def vec2text(vec):
     max_i = tf.argmax(vec, axis=1)
     text = []
@@ -59,8 +73,9 @@ def vec2text(vec):
 
 
 """
-返回一个验证码的array形式和对应的字符串标签
-:return: tuple (str, numpy.array)
+function: 返回一个验证码的array形式和对应的字符串标签
+param:    图片的路径，图片名
+return:   tuple(str, numpy.array)
 """
 def get_captcha_text_image(img_path, img_name):
     # 标签
@@ -73,6 +88,11 @@ def get_captcha_text_image(img_path, img_name):
     return label, captcha_array
 
 
+"""
+function: 加载数据集
+param:    批次大小，数据集路径
+return:   tuple(numpy.array, numpy.array)
+"""
 def load_data(batch_size=None, images_path=TRAIN_IMAGES_PATH):
     images_list = os.listdir(images_path)
     # 打乱顺序
@@ -96,6 +116,11 @@ def load_data(batch_size=None, images_path=TRAIN_IMAGES_PATH):
     return x, y
 
 
+"""
+function: 搭建模型
+param:    
+return:   model
+"""
 def cnn():
     model = models.Sequential()
     # 第一层卷积核，卷积核大小为3*3，32个，颜色通道为1
@@ -128,6 +153,9 @@ def cnn():
     return model
 
 
+"""
+function: 模型训练
+"""
 def train():
     x, y = load_data()
 
@@ -145,6 +173,8 @@ def train():
 
     return h
 
+
+# 模型评估
 def evaluate():
     if os.path.exists('simple1.h5'):
         # 加载训练好的模型
@@ -158,6 +188,7 @@ def evaluate():
     print('loss: {} >>>>>>> accuracy: {}'.format(test_loss, test_acc))
 
 
+# 绘制loss&accuracy曲线
 def loss_acc_curve(history):
     acc = history.history['accuracy']
     val_acc = history.history['val_accuracy']
@@ -177,6 +208,8 @@ def loss_acc_curve(history):
     plt.legend()
     plt.show()
 
+
+# 模型预测
 def predict():
     if os.path.exists('simple1.h5'):
         # 加载训练好的模型
@@ -216,3 +249,5 @@ if __name__ == '__main__':
     loss_acc_curve(his)
     evaluate()
     predict()
+
+
