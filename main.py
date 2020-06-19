@@ -26,9 +26,8 @@ CHAR_SET_LEN = len(CHAR_SET)
 IMAGE_HEIGHT = 60
 IMAGE_WIDTH = 120
 MAX_CAPTCHA = 4
-TRAIN_IMAGES_PATH = r'C:\Users\yl_20\Desktop\Graduation Project\4.Code\train'
-TEST_IMAGES_PATH = r'C:\Users\yl_20\Desktop\Graduation Project\4.Code\test'
-SAVE_PATH = r'C:\Users\yl_20\Desktop\Graduation Project\4.Code\model'
+TRAIN_IMAGES_PATH = r'train'
+TEST_IMAGES_PATH = r'test'
 
 # 图片转为灰度图，如果是3通道图则计算，单通道图则直接返回
 def rgb2gray(img):
